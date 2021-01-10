@@ -21,8 +21,10 @@ class User(ModelInterface):
 
     @staticmethod
     def create(data) -> dict:
-        pass
+        result = DB.query_one("create_user", (data,))
+        return result
 
     @staticmethod
     def update(pk_id, data) -> dict:
-        pass
+        result = DB.query_one("update_user", (pk_id, data,))
+        return result

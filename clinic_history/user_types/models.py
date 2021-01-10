@@ -11,20 +11,20 @@ class UserType(ModelInterface):
 
     @staticmethod
     def get_all() -> list:
-        result = DB.query_all("select * from get_user_types();")
+        result = DB.query_all("get_user_types")
         return result
 
     @staticmethod
     def get_by_id(pk_id) -> dict:
-        result = DB.query_one("select * from get_user_type(%s);", (pk_id,))
+        result = DB.query_one("get_user_type", (pk_id,))
         return result
 
     @staticmethod
     def create(data) -> dict:
-        result = DB.query_one("select * from get_user_type(%s);", (data,))
+        result = DB.query_one("create_user_type", (data,))
         return result
 
     @staticmethod
     def update(pk_id, data) -> dict:
-        result = DB.query_one("select * from get_user_type(%s);", (pk_id,))
+        result = DB.query_one("update_user_type", (pk_id, data,))
         return result
