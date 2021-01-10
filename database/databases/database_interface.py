@@ -28,18 +28,19 @@ class DatabaseInterface(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def query_all(self, query, args=None) -> list:
+    def query_all(self, query, args=None, commit=False) -> list:
         """Query that return all rows.
 
         :param query: query for the database.
         :type query: str
         :param args: query arguments, optional.
+        :param commit: Flag to do commit.
 
         :return: row list.
         """
 
     @abc.abstractmethod
-    def query_many(self, n, query, args=None) -> list:
+    def query_many(self, n, query, args=None, commit=False) -> list:
         """Query with a row limit.
 
         :param n: row limit.
@@ -47,17 +48,19 @@ class DatabaseInterface(metaclass=abc.ABCMeta):
         :param query: query for the database.
         :type query: str
         :param args: query arguments
+        :param commit: Flag to do commit.
 
         :return: row list.
         """
 
     @abc.abstractmethod
-    def query_one(self, query, args=None) -> dict:
+    def query_one(self, query, args=None, commit=False) -> dict:
         """Query that return one row or value.
 
         :param query: query for the database.
         :type query: str
         :param args: query arguments
+        :param commit: Flag to do commit.
 
         :return: row or value
         """

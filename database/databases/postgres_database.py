@@ -41,7 +41,7 @@ class PostgresDatabase(DatabaseInterface):
             connection.close()
             print('PostgreSQL connection is closed')
 
-    def __execute_query(self, connection, query, args=None):
+    def __execute_query(self, connection, query, args=None, commit=False):
         cursor = None
         try:
             if connection:
@@ -51,6 +51,8 @@ class PostgresDatabase(DatabaseInterface):
                     cursor.callproc(query, args)
                 else:
                     cursor.callproc(query)
+                if commit:
+                    connection.commit()
         except (Exception, Error) as error:
             print(f'Error while querying the database. {error}')
         finally:
@@ -66,12 +68,12 @@ class PostgresDatabase(DatabaseInterface):
             print(msg)
             return False
 
-    def query_all(self, query, args=None) -> list:
+    def query_all(self, query, args=None, commit=False) -> list:
         connection, msg = self.__connect_database()
         cursor = None
         result = None
         try:
-            cursor = self.__execute_query(connection, query, args)
+            cursor = self.__execute_query(connection, query, args, commit)
             if cursor:
                 result = [dict(row) for row in cursor.fetchall()]
         except (Exception, Error) as error:
@@ -80,12 +82,12 @@ class PostgresDatabase(DatabaseInterface):
             self.__close_connection(connection, cursor)
             return result
 
-    def query_many(self, n, query, args=None) -> list:
+    def query_many(self, n, query, args=None, commit=False) -> list:
         connection, msg = self.__connect_database()
         cursor = None
         result = None
         try:
-            cursor = self.__execute_query(connection, query, args)
+            cursor = self.__execute_query(connection, query, args, commit)
             if cursor:
                 result = [dict(row) for row in cursor.fetchmany(n)]
         except (Exception, Error) as error:
@@ -94,12 +96,12 @@ class PostgresDatabase(DatabaseInterface):
             self.__close_connection(connection, cursor)
             return result
 
-    def query_one(self, query, args=None) -> dict:
+    def query_one(self, query, args=None, commit=False) -> dict:
         connection, msg = self.__connect_database()
         cursor = None
         result = None
         try:
-            cursor = self.__execute_query(connection, query, args)
+            cursor = self.__execute_query(connection, query, args, commit)
             if cursor:
                 result = dict(cursor.fetchone())
         except (Exception, Error) as error:
