@@ -1,4 +1,5 @@
 """Database Interface
+
 Interface to manage databases (connections and queries)
 """
 import abc
@@ -51,7 +52,7 @@ class DatabaseInterface(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def query_one(self, query, args=None) -> tuple:
+    def query_one(self, query, args=None) -> dict:
         """Query that return one row or value.
 
         :param query: query for the database.

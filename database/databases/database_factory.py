@@ -1,6 +1,6 @@
 """Database Factory"""
-from database.database_interface import DatabaseInterface
-from database.postgres_database import PostgresDatabase
+from database.databases.database_interface import DatabaseInterface
+from database.databases.postgres_database import PostgresDatabase
 
 
 class DatabaseFactory:

@@ -5,11 +5,12 @@ Functions to manage the postgres database.
 Useful information:
 https://pynative.com/python-postgresql-tutorial/#:~:text=Use%20the%20connect()%20method,connection%20after%20your%20work%20completes.
 """
-
 import psycopg2
 from psycopg2 import Error
+from psycopg2.extras import DictCursor
 
-from database.database_interface import DatabaseInterface
+# Databases
+from database.databases.database_interface import DatabaseInterface
 
 
 class PostgresDatabase(DatabaseInterface):
@@ -39,6 +40,21 @@ class PostgresDatabase(DatabaseInterface):
             connection.close()
             print('PostgreSQL connection is closed')
 
+    def __execute_query(self, connection, query, args=None):
+        cursor = None
+        try:
+            if connection:
+                cursor = connection.cursor(
+                    cursor_factory=psycopg2.extras.DictCursor)
+                if args:
+                    cursor.execute(query, args)
+                else:
+                    cursor.execute(query)
+        except (Exception, Error) as error:
+            print(f'Error while querying the database. {error}')
+        finally:
+            return cursor
+
     def valid_connection(self) -> bool:
         connection, msg = self.__connect_database()
         if connection:
@@ -54,13 +70,9 @@ class PostgresDatabase(DatabaseInterface):
         cursor = None
         result = None
         try:
-            if connection:
-                cursor = connection.cursor()
-                if args:
-                    cursor.execute(query, args)
-                else:
-                    cursor.execute(query)
-                result = cursor.fetchall()
+            cursor = self.__execute_query(connection, query, args)
+            if cursor:
+                result = [dict(row) for row in cursor.fetchall()]
         except (Exception, Error) as error:
             print(f'Error while querying the database. {error}')
         finally:
@@ -72,31 +84,23 @@ class PostgresDatabase(DatabaseInterface):
         cursor = None
         result = None
         try:
-            if connection:
-                cursor = connection.cursor()
-                if args:
-                    cursor.execute(query, args)
-                else:
-                    cursor.execute(query)
-                result = cursor.fetchmany(n)
+            cursor = self.__execute_query(connection, query, args)
+            if cursor:
+                result = [dict(row) for row in cursor.fetchmany(n)]
         except (Exception, Error) as error:
             print(f'Error while querying the database. {error}')
         finally:
             self.__close_connection(connection, cursor)
             return result
 
-    def query_one(self, query, args=None) -> tuple:
+    def query_one(self, query, args=None) -> dict:
         connection, msg = self.__connect_database()
         cursor = None
         result = None
         try:
-            if connection:
-                cursor = connection.cursor()
-                if args:
-                    cursor.execute(query, args)
-                else:
-                    cursor.execute(query)
-                result = cursor.fetchone()
+            cursor = self.__execute_query(connection, query, args)
+            if cursor:
+                result = dict(cursor.fetchone())
         except (Exception, Error) as error:
             print(f'Error while querying the database. {error}')
         finally:
