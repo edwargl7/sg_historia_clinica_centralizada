@@ -11,12 +11,12 @@ class User(ModelInterface):
 
     @staticmethod
     def get_all() -> list:
-        result = DB.query_all("select * from get_users();")
+        result = DB.query_all("get_users")
         return result
 
     @staticmethod
     def get_by_id(pk_id) -> dict:
-        result = DB.query_one("select * from get_user(%s);", (pk_id,))
+        result = DB.query_one("get_user", (pk_id,))
         return result
 
     @staticmethod

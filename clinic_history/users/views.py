@@ -1,7 +1,7 @@
 """User views"""
 import json
 from database.utils.json_util import json_serial
-from flask import request, jsonify, Response
+from flask import request, Response
 from flask_restful import Resource
 
 # Models
@@ -13,7 +13,9 @@ class UserListResource(Resource):
     def get():
         users = User.get_all()
         users = json.dumps(users, default=json_serial, ensure_ascii=False)
-        return Response(users.encode('utf8'),
+        if users:
+            users = users.encode('utf8')
+        return Response(users,
                         mimetype="application/json",
                         status=200
                         )
@@ -27,8 +29,14 @@ class UserResource(Resource):
 
     @staticmethod
     def get(user_id):
-        users = User.get_all()
-        return jsonify(users)
+        user = User.get_by_id(user_id)
+        user = json.dumps(user, default=json_serial, ensure_ascii=False)
+        if user:
+            user = user.encode('utf8')
+        return Response(user,
+                        mimetype="application/json",
+                        status=200
+                        )
 
     @staticmethod
     def put(user_id):

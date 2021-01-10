@@ -48,9 +48,9 @@ class PostgresDatabase(DatabaseInterface):
                 cursor = connection.cursor(
                     cursor_factory=psycopg2.extras.DictCursor)
                 if args:
-                    cursor.execute(query, args)
+                    cursor.callproc(query, args)
                 else:
-                    cursor.execute(query)
+                    cursor.callproc(query)
         except (Exception, Error) as error:
             print(f'Error while querying the database. {error}')
         finally:
