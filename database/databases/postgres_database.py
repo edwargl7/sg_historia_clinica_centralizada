@@ -4,6 +4,7 @@ Functions to manage the postgres database.
 
 Useful information:
 https://pynative.com/python-postgresql-tutorial/#:~:text=Use%20the%20connect()%20method,connection%20after%20your%20work%20completes.
+https://stackoverflow.com/questions/16354222/building-rest-api-in-flask
 """
 import psycopg2
 from psycopg2 import Error
